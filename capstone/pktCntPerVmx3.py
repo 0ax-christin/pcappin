@@ -29,8 +29,7 @@ def generateFilePathList(walk_dir):
             currentDirFile = os.path.join(root, filename)
             currentDir = os.path.basename(os.path.dirname(currentDirFile))
             if currentDir in filePaths:
-                filePaths[currentDir].append(rdpcap(currentDirFile))
-            #filePaths.append({os.path.basename(os.path.dirname(currentDirFile)): rdpcap(currentDirFile)})
+                filePaths[currentDir].append(currentDirFile)
     return filePaths
 
 # Given a list of files, read them with scapy and append these files into a list to be returned
@@ -97,7 +96,7 @@ def createBarGraph(vmxSrcList):
             {
                 "data": [plotly.graph_objs.Bar(x=xData, y=yData)],
             },
-            filename = "{}/files/{}_srcIP_summary.html".format(basedir.baseDir, vmxKey)
+            filename = "{}/files/{}_srcIP_summary.html".format(basedir.fileWriteDir, vmxKey)
         )
 
 def createScatterPlot(vmxSrcList):
@@ -113,7 +112,7 @@ def createScatterPlot(vmxSrcList):
             {
                 "data": [plotly.graph_objs.Scatter(x=xData, y=yData)],
             },
-            filename = "{}/files/{}_srcIP_scatter.html".format(basedir.baseDir, vmxKey)
+            filename = "{}/files/{}_srcIP_scatter.html".format(basedir.fileWriteDir, vmxKey)
         )
 
 def clearEmptyDictListValues(dicte):
@@ -123,16 +122,16 @@ def clearEmptyDictListValues(dicte):
     return dicte
 
 def main():
-    walk_dir = '{}/router/'.format(basedir.baseDir)
+    walk_dir = '{}/Router/'.format(basedir.baseDir)
     fileOpenedPaths = generateFilePathList(walk_dir)
-    # scapy_file_opened = {}
-    # scapy_file_opened = generatedOpenedFileList(filePaths)
-    print(fileOpenedPaths.keys())
     fileOpenedPaths = clearEmptyDictListValues(fileOpenedPaths)
-    print(fileOpenedPaths.keys())
+    print(fileOpenedPaths)
     for interface in fileOpenedPaths.keys():
-        print(interface)
-        srcIPCount = generateSrcIPCount(fileOpenedPaths[interface])
+        opened_files = []
+
+        for fileNames in fileOpenedPaths[interface]:
+            opened_files.append(rdpcap(fileNames))
+        srcIPCount = generateSrcIPCount(opened_files)
         vmxSrcList = createVmxSrcList(srcIPCount, interface)
         createBarGraph(vmxSrcList)
         #createScatterPlot(vmxSrcList)
