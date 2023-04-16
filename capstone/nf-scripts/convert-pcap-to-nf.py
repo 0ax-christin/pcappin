@@ -2,16 +2,19 @@ import sys, os
 from pathlib import Path
 import subprocess
 
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent)
-
-import generatePCAPwoPayload
+def generateFileList(walk_dir):
+    fileList = []
+    for root, subdirs, files in os.walk(walk_dir):
+        for filename in files:
+            currentDirFile = os.path.join(root, filename)
+            currentDir = os.path.basename(os.path.dirname(currentDirFile))
+            fileList.append(currentDirFile)
+    return fileList
 
 def main():
     #walk_dir = '{}/'.format(basedir.baseDir)
     walk_dir = '/mnt/capstone_pcaps/'
-    fileList = generatePCAPwoPayload.generateFileList(walk_dir)
+    fileList = generateFileList(walk_dir)
     for file in fileList:
         currentDir = os.path.dirname(file)
         fileName = (os.path.basename(file)).split('.')[0]
