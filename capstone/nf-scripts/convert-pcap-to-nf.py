@@ -1,7 +1,7 @@
 import sys, os
 from pathlib import Path
 import subprocess
-import generatePCAPwoPayload.generateFileList
+from capstone import generatePCAPwoPayload
 
 def main():
     #walk_dir = '{}/'.format(basedir.baseDir)
