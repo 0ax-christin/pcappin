@@ -123,7 +123,7 @@ def clearEmptyDictListValues(dicte):
     return dicte
 
 def main():
-    walk_dir = '{}/pcaps/Router/'.format(basedir.baseDir)
+    walk_dir = '{}/router/'.format(basedir.baseDir)
     fileOpenedPaths = generateFilePathList(walk_dir)
     # scapy_file_opened = {}
     # scapy_file_opened = generatedOpenedFileList(filePaths)
@@ -134,8 +134,8 @@ def main():
         print(interface)
         srcIPCount = generateSrcIPCount(fileOpenedPaths[interface])
         vmxSrcList = createVmxSrcList(srcIPCount, interface)
-        #createBarGraph(vmxSrcList)
-        createScatterPlot(vmxSrcList)
+        createBarGraph(vmxSrcList)
+        #createScatterPlot(vmxSrcList)
     # srcIPCount = generateSrcIPCount(scapy_file_opened)
     # vmxSrcList = createVmxSrcList(srcIPCount)
     # with open("vmxSrcList.pickle", "wb") as outfile:    
