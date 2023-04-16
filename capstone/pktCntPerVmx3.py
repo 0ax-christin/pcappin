@@ -79,10 +79,6 @@ def createVmxSrcList(srcIPCountDict, interface):
             vmxSrcList['vmx5'][key] = value
     return vmxSrcList
 
-# for key, value in srcIPCount.items():
-#     if re.search(subnet_interface["vmx0"], key) or re.search(subnet_interface["vmx1"], key) or re.search(subnet_interface["vmx2"], key) or re.search(subnet_interface["vmx3"], key) or re.search(subnet_interface["vmx5"], key) == None:
-#         srcIPCount.pop(key)
-
 # Creating Plots with plotly per Subnet
 # Requires a dictionary where keys are router interfaces and values are the associated subnet src IP counts
 def createBarGraph(vmxSrcList):
@@ -106,8 +102,6 @@ def createScatterPlot(vmxSrcList):
         for key, value in vmxSrcList[vmxKey].items():
             xData.append(key)
             yData.append(value)
-        # plot = px.scatter(xData, yData)
-        # plot.show()
         plotly.offline.plot(
             {
                 "data": [plotly.graph_objs.Scatter(x=xData, y=yData)],
@@ -122,7 +116,7 @@ def clearEmptyDictListValues(dicte):
     return dicte
 
 def main():
-    walk_dir = '{}/Router/'.format(basedir.baseDir)
+    walk_dir = '{}/router/'.format(basedir.baseDir)
     fileOpenedPaths = generateFilePathList(walk_dir)
     fileOpenedPaths = clearEmptyDictListValues(fileOpenedPaths)
     print(fileOpenedPaths)
@@ -130,19 +124,10 @@ def main():
         opened_files = []
 
         for fileNames in fileOpenedPaths[interface]:
-            opened_files.append(rdpcap(fileNames))
+            opened_files.append(PcapReader(fileNames))
         srcIPCount = generateSrcIPCount(opened_files)
         vmxSrcList = createVmxSrcList(srcIPCount, interface)
         createBarGraph(vmxSrcList)
-        #createScatterPlot(vmxSrcList)
-    # srcIPCount = generateSrcIPCount(scapy_file_opened)
-    # vmxSrcList = createVmxSrcList(srcIPCount)
-    # with open("vmxSrcList.pickle", "wb") as outfile:    
-    #     pickle.dump(vmxSrcList, outfile)
-    # with open("test.pickle", "rb") as infile:
-    #     vmxSrcList_dict_reconstructed = pickle.load(infile)
-    
-    #screateBarGraph(vmxSrcList)
 
 if __name__ == "__main__":
     main()
